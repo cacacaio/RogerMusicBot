@@ -1,0 +1,19 @@
+{
+  "name": "roger-reborn",
+  "version": "1.0.0",
+  "description": "Roger Atualizado",
+  "main": "index.js",
+  "author": "Caio Augusto",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "start": "npm run build && node ./build/index.js"
+  },
+  "dependencies": {
+    "discord.js": "^13.1.0",
+    "dotenv": "^10.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.4.2"
+  }
+}
