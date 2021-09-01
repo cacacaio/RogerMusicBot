@@ -1,12 +1,19 @@
 require('dotenv').config()
 
-import Client from './src/bot'
+import Client from './bot'
+import {Player} from 'discord-player'
+import {execute} from './commands/play'
 
-const client = new Client();
-client.login(process.env.TOKEN);
-client.once('ready', () =>{
-    console.log('Pai ta Pronto')
+const client = new Client()
+client.login(process.env.token)
+const player = new Player(client)
+client.once('ready', () => {
+  console.log('Pai ta Pronto')
 })
-client.on('messageCreate', message =>{
+client.on('interactionCreate', async (interaction) => {
+  if (interaction.isCommand()) {
+    if (interaction.commandName == 'play') {
+      execute(interaction, player)
+    }
+  }
 })
-console.log(process.env.TOKEN)
