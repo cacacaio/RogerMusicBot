@@ -1,6 +1,7 @@
 import { CommandInteraction, GuildMember, MessageEmbed } from 'discord.js'
-import { Embed, SlashCommandBuilder } from '@discordjs/builders'
 import { Player, QueryType } from 'discord-player'
+
+import { SlashCommandBuilder } from '@discordjs/builders'
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -28,6 +29,8 @@ module.exports = {
           queue.destroy()
         })
       }
+      if (interaction.member.voice.id == queue.connection.channel.id)
+        return await interaction.followUp('Voce não está no mesmo canal que eu!')
 
       const track = await player
         .search(url, {
@@ -42,7 +45,6 @@ module.exports = {
       if (!track || !track.tracks.length) return interaction.followUp('Não consegui achar a musica')
       const currentTrack = track.tracks[0]
       track.playlist ? queue.addTracks(track.tracks) : queue.addTrack(track.tracks[0])
-
       if (!queue.playing) await queue.play()
       const embed = new MessageEmbed()
         .setTitle(currentTrack.title)
@@ -56,7 +58,6 @@ module.exports = {
           '',
           `https://youtube.com/${encodeURIComponent(currentTrack.author)}`,
         )
-
       await interaction.followUp({ embeds: [embed] })
     } else {
       await interaction.editReply('Voce não está em um canal!')
