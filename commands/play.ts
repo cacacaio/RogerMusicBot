@@ -29,7 +29,7 @@ module.exports = {
           queue.destroy()
         })
       }
-      if (interaction.member.voice.id == queue.connection.channel.id)
+      if (interaction.member.voice.channelId != interaction.guild?.me?.voice.channelId)
         return await interaction.followUp('Voce não está no mesmo canal que eu!')
 
       const track = await player
