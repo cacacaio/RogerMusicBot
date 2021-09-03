@@ -12,7 +12,7 @@ const client = new Client({
 })
 const player = new Player(client)
 const commandFiles = fs
-  .readdirSync('./commands')
+  .readdirSync(process.env.COMMAND_FOLDER!)
   .filter((file) => file.endsWith('.js') || file.endsWith('.ts'))
 
 for (const file of commandFiles) {
