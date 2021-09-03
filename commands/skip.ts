@@ -1,5 +1,6 @@
 import {CommandInteraction, GuildMember, MessageEmbed} from 'discord.js'
 
+import {EmbedMessage} from '../helpers/embedMessage'
 import {Player} from 'discord-player'
 import {SlashCommandBuilder} from '@discordjs/builders'
 
@@ -8,11 +9,7 @@ module.exports = {
   execute: async (interaction: CommandInteraction, player: Player) => {
     if (!interaction.guildId) return
     const queue = player.getQueue(interaction.guildId)
-    if (!queue)
-      await interaction.followUp({
-        content: 'Não existe uma musica pra skipar!',
-        ephemeral: false,
-      })
+    if (!queue) await EmbedMessage('Não existe musica para skipar', interaction)
     if (
       interaction.member instanceof GuildMember &&
       interaction.member.voice.channel &&
@@ -29,7 +26,7 @@ module.exports = {
         .addField('🎶🎶Agora Tocando🎶🎶', '\u200B')
       await interaction.followUp({embeds: [embed]})
     } else {
-      await interaction.followUp('Voce não está no meu canal!')
+      await EmbedMessage('Voce não está no meu canal', interaction)
     }
   },
 }

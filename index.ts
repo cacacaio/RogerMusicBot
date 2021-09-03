@@ -4,8 +4,8 @@ import {Client, Intents} from 'discord.js'
 
 import {Commands} from './bot'
 import Player from './bot'
-import {deploy} from './deployCommands'
-import events from './events'
+import {deploy} from './helpers/deployCommands'
+import events from './helpers/events'
 import fs from 'fs'
 
 const client = new Client({
