@@ -1,27 +1,25 @@
-import { CommandInteraction, GuildMember, MessageEmbed } from 'discord.js'
-import { Player, QueryType } from 'discord-player'
+import {CommandInteraction, GuildMember, MessageEmbed} from 'discord.js'
+import {Player, QueryType} from 'discord-player'
 
-import { SlashCommandBuilder } from '@discordjs/builders'
+import {SlashCommandBuilder} from '@discordjs/builders'
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('play')
     .setDescription('Toca musica')
     .addStringOption((option) =>
-      option.setName('song').setRequired(true).setDescription('Nome da musica'),
+      option.setName('song').setRequired(true).setDescription('Nome da musica')
     ),
   execute: async (interaction: CommandInteraction, player: Player) => {
     if (!interaction.guildId) return
-
     const url = interaction.options.getString('song', true)
 
     if (interaction.member instanceof GuildMember && interaction.member.voice.channel) {
       const channel = interaction.member.voice.channel
 
       const queue = player.createQueue(interaction.guild!, {
-        metadata: { channel: channel },
+        metadata: {channel: channel, textChannel: interaction.channel},
       })
-
       if (!queue.connection) {
         await queue.connect(channel).catch(async (err) => {
           await interaction.followUp('Não consegui entrar no canal')
@@ -39,7 +37,7 @@ module.exports = {
         })
         .catch((err) => {
           console.log(err)
-          interaction.followUp({ content: 'Erro ao buscar musica', ephemeral: true })
+          interaction.followUp({content: 'Erro ao buscar musica', ephemeral: true})
         })
 
       if (!track || !track.tracks.length) return interaction.followUp('Não consegui achar a musica')
@@ -56,9 +54,9 @@ module.exports = {
         .setAuthor(
           currentTrack.author,
           '',
-          `https://youtube.com/${encodeURIComponent(currentTrack.author)}`,
+          `https://youtube.com/${encodeURIComponent(currentTrack.author)}`
         )
-      await interaction.followUp({ embeds: [embed] })
+      await interaction.followUp({embeds: [embed]})
     } else {
       await interaction.editReply('Voce não está em um canal!')
     }

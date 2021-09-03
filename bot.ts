@@ -1,7 +1,15 @@
-import { BaseCommandInteraction, Client, Collection, CommandInteraction, Intents } from 'discord.js'
+import {
+  BaseCommandInteraction,
+  Client,
+  Collection,
+  CommandInteraction,
+  Intents,
+  TextBasedChannel,
+  TextChannel,
+} from 'discord.js'
 
-import { Player } from 'discord-player'
-import { SlashCommandOptionsOnlyBuilder } from '@discordjs/builders'
+import {Player} from 'discord-player'
+import {SlashCommandOptionsOnlyBuilder} from '@discordjs/builders'
 
 export interface Commands {
   data: SlashCommandOptionsOnlyBuilder
