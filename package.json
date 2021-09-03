@@ -7,9 +7,9 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "start": "npm run build && node ./build/index.js",
     "dev": "ts-node-dev ./index.ts",
-    "dev:debug": "ts-node-dev --inspect=4321 --respawn ./index.ts"
+    "dev:debug": "ts-node-dev --inspect=4321 --respawn ./index.ts",
+    "postinstall" : "npm run build"
   },
   "dependencies": {
     "@discordjs/builders": "^0.6.0",

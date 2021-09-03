@@ -24,11 +24,7 @@ client.once('ready', () => {
   console.log('Pai ta Pronto')
 })
 client.on('messageCreate', (message) => {
-  if (
-    message.content == '!deploy' &&
-    message.guild &&
-    message.member?.permissions.has('ADMINISTRATOR')
-  ) {
+  if (message.content == '!deploy' && message.guild) {
     deploy(
       [...player.commands.values()].map((c) => c.data),
       message.guild.id,
@@ -40,9 +36,4 @@ client.on('interactionCreate', async (interaction) => {
   await interaction.deferReply()
   const command = player.commands.get(interaction.commandName)
   command?.execute(interaction, player)
-})
-player.on('botDisconnect', (queue) => {
-  if (!queue.destroyed) {
-    queue.destroy()
-  }
 })
