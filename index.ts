@@ -1,10 +1,10 @@
 import 'dotenv/config'
 
-import {Client, Intents} from 'discord.js'
+import { Client, Intents } from 'discord.js'
 
-import {Commands} from './bot'
+import { Commands } from './bot'
 import Player from './bot'
-import {deploy} from './helpers/deployCommands'
+import { deploy } from './helpers/deployCommands'
 import events from './helpers/events'
 import fs from 'fs'
 
@@ -29,7 +29,7 @@ client.on('messageCreate', (message) => {
   if (message.content == '!deploy' && message.guild) {
     deploy(
       [...player.commands.values()].map((c) => c.data),
-      message.guild.id
+      message.guild.id,
     )
   }
 })

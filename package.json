@@ -8,8 +8,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "ts-node-dev ./index.ts",
-    "dev:debug": "ts-node-dev --inspect=4321 --respawn ./index.ts",
-    "postinstall" : "npm run build"
+    "dev:debug": "ts-node-dev --inspect=4321 --respawn ./index.ts"
   },
   "dependencies": {
     "@discordjs/builders": "^0.6.0",
@@ -19,7 +18,9 @@
     "discord-player": "^5.1.0",
     "discord.js": "^13.1.0",
     "dotenv": "^10.0.0",
-    "ffmpeg-static": "^4.4.0"
+    "ffmpeg-static": "^4.4.0",
+    "libsodium-wrappers": "^0.7.9",
+    "sodium" : "^3.0.2"
   },
   "engines": {
     "node": "16.x"
