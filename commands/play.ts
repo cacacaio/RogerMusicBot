@@ -1,50 +1,71 @@
-import { CommandInteraction, GuildMember, MessageEmbed } from 'discord.js'
+import {
+  CommandInteraction,
+  GuildMember,
+  MessageEmbed,
+  StageChannel,
+  TextBasedChannels,
+  VoiceChannel
+} from 'discord.js'
 import { Player, QueryType } from 'discord-player'
 
 import { SlashCommandBuilder } from '@discordjs/builders'
+
+export type metatadaQueue = {
+  channel: VoiceChannel | StageChannel
+  textChannel: TextBasedChannels | null
+  currentPage: number
+}
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('play')
     .setDescription('Toca musica')
     .addStringOption((option) =>
-      option.setName('song').setRequired(true).setDescription('Nome da musica'),
+      option.setName('song').setRequired(true).setDescription('Nome da musica')
     ),
   execute: async (interaction: CommandInteraction, player: Player) => {
-    if (!interaction.guildId) return
+    if (!interaction.guildId && !interaction.guild) return
     const url = interaction.options.getString('song', true)
-
-    if (interaction.member instanceof GuildMember && interaction.member.voice.channel) {
+    if (
+      interaction.member instanceof GuildMember &&
+      interaction.member.voice.channel
+    ) {
       const channel = interaction.member.voice.channel
+      const track = await player.search(url, {
+        requestedBy: interaction.user,
+        searchEngine: QueryType.AUTO
+      })
 
-      const track = await player
-        .search(url, {
-          requestedBy: interaction.user,
-          searchEngine: QueryType.AUTO,
-        })
-        .catch((err) => {
-          console.log(err)
-          interaction.followUp({ content: 'Erro ao buscar musica', ephemeral: true })
-        })
+      if (!track || !track.tracks.length) {
+        return interaction.followUp('Não consegui achar a musica')
+      }
 
-      if (!track || !track.tracks.length) return interaction.followUp('Não consegui achar a musica')
-
-      const queue = player.createQueue(interaction.guild!, {
-        metadata: { channel: channel, textChannel: interaction.channel },
+      const queue = player.createQueue<metatadaQueue>(interaction.guild!, {
+        metadata: {
+          channel: channel,
+          textChannel: interaction.channel,
+          currentPage: 0
+        }
       })
 
       if (!queue.connection) {
-        await queue.connect(channel).catch(async (err) => {
+        await queue.connect(channel).catch(async () => {
           await interaction.followUp('Não consegui entrar no canal')
-          console.error('Destroyed Connection on Join Error')
-          queue.destroy()
+          player.deleteQueue(interaction.guildId!)
         })
       }
-      if (interaction.member.voice.channelId != interaction.guild?.me?.voice.channelId)
-        return await interaction.followUp('Voce não está no mesmo canal que eu!')
+      if (
+        interaction.member.voice.channelId !=
+        interaction.guild?.me?.voice.channelId
+      )
+        return await interaction.followUp(
+          'Voce não está no mesmo canal que eu!'
+        )
 
       const currentTrack = track.tracks[0]
-      track.playlist ? queue.addTracks(track.tracks) : queue.addTrack(track.tracks[0])
+      track.playlist
+        ? queue.addTracks(track.tracks)
+        : queue.addTrack(track.tracks[0])
       if (!queue.playing) await queue.play()
 
       const embed = new MessageEmbed()
@@ -57,11 +78,11 @@ module.exports = {
         .setAuthor(
           currentTrack.author,
           '',
-          `https://youtube.com/${encodeURIComponent(currentTrack.author)}`,
+          `https://youtube.com/${encodeURIComponent(currentTrack.author)}`
         )
       await interaction.followUp({ embeds: [embed] })
     } else {
       await interaction.editReply('Voce não está em um canal!')
     }
-  },
+  }
 }
