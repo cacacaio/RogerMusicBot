@@ -1,14 +1,14 @@
-import {CommandInteraction, GuildMember, MessageEmbed} from 'discord.js'
-import {Player, QueryType} from 'discord-player'
+import { CommandInteraction, GuildMember, MessageEmbed } from 'discord.js'
+import { Player, QueryType } from 'discord-player'
 
-import {SlashCommandBuilder} from '@discordjs/builders'
+import { SlashCommandBuilder } from '@discordjs/builders'
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('play')
     .setDescription('Toca musica')
     .addStringOption((option) =>
-      option.setName('song').setRequired(true).setDescription('Nome da musica')
+      option.setName('song').setRequired(true).setDescription('Nome da musica'),
     ),
   execute: async (interaction: CommandInteraction, player: Player) => {
     if (!interaction.guildId) return
@@ -17,9 +17,22 @@ module.exports = {
     if (interaction.member instanceof GuildMember && interaction.member.voice.channel) {
       const channel = interaction.member.voice.channel
 
+      const track = await player
+        .search(url, {
+          requestedBy: interaction.user,
+          searchEngine: QueryType.AUTO,
+        })
+        .catch((err) => {
+          console.log(err)
+          interaction.followUp({ content: 'Erro ao buscar musica', ephemeral: true })
+        })
+
+      if (!track || !track.tracks.length) return interaction.followUp('Não consegui achar a musica')
+
       const queue = player.createQueue(interaction.guild!, {
-        metadata: {channel: channel, textChannel: interaction.channel},
+        metadata: { channel: channel, textChannel: interaction.channel },
       })
+
       if (!queue.connection) {
         await queue.connect(channel).catch(async (err) => {
           await interaction.followUp('Não consegui entrar no canal')
@@ -30,20 +43,10 @@ module.exports = {
       if (interaction.member.voice.channelId != interaction.guild?.me?.voice.channelId)
         return await interaction.followUp('Voce não está no mesmo canal que eu!')
 
-      const track = await player
-        .search(url, {
-          requestedBy: interaction.user,
-          searchEngine: QueryType.AUTO,
-        })
-        .catch((err) => {
-          console.log(err)
-          interaction.followUp({content: 'Erro ao buscar musica', ephemeral: true})
-        })
-
-      if (!track || !track.tracks.length) return interaction.followUp('Não consegui achar a musica')
       const currentTrack = track.tracks[0]
       track.playlist ? queue.addTracks(track.tracks) : queue.addTrack(track.tracks[0])
       if (!queue.playing) await queue.play()
+
       const embed = new MessageEmbed()
         .setTitle(currentTrack.title)
         .addField('🎶🎶Adicionada a Playlist🎶🎶', '\u200B')
@@ -54,9 +57,9 @@ module.exports = {
         .setAuthor(
           currentTrack.author,
           '',
-          `https://youtube.com/${encodeURIComponent(currentTrack.author)}`
+          `https://youtube.com/${encodeURIComponent(currentTrack.author)}`,
         )
-      await interaction.followUp({embeds: [embed]})
+      await interaction.followUp({ embeds: [embed] })
     } else {
       await interaction.editReply('Voce não está em um canal!')
     }

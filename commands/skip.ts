@@ -1,11 +1,13 @@
-import {CommandInteraction, GuildMember, MessageEmbed} from 'discord.js'
+import { CommandInteraction, GuildMember, MessageEmbed } from 'discord.js'
 
-import {EmbedMessage} from '../helpers/embedMessage'
-import {Player} from 'discord-player'
-import {SlashCommandBuilder} from '@discordjs/builders'
+import { EmbedMessage } from '../helpers/embedMessage'
+import { Player } from 'discord-player'
+import { SlashCommandBuilder } from '@discordjs/builders'
 
 module.exports = {
-  data: new SlashCommandBuilder().setName('skip').setDescription('Pula uma musica'),
+  data: new SlashCommandBuilder()
+    .setName('skip')
+    .setDescription('Pula uma musica'),
   execute: async (interaction: CommandInteraction, player: Player) => {
     if (!interaction.guildId) return
     const queue = player.getQueue(interaction.guildId)
@@ -13,7 +15,8 @@ module.exports = {
     if (
       interaction.member instanceof GuildMember &&
       interaction.member.voice.channel &&
-      interaction.member.voice.channelId == interaction.guild?.me?.voice.channelId
+      interaction.member.voice.channelId ==
+        interaction.guild?.me?.voice.channelId
     ) {
       queue.skip()
       const currentSong = queue.current
@@ -24,9 +27,9 @@ module.exports = {
         .setImage(currentSong.thumbnail)
         .setThumbnail(currentSong.requestedBy.avatarURL()!)
         .addField('🎶🎶Agora Tocando🎶🎶', '\u200B')
-      await interaction.followUp({embeds: [embed]})
+      await interaction.followUp({ embeds: [embed] })
     } else {
       await EmbedMessage('Voce não está no meu canal', interaction)
     }
-  },
+  }
 }
