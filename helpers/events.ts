@@ -2,11 +2,11 @@ import {
   MessageEmbed,
   MessageOptions,
   TextChannel,
-  VoiceChannel
+  VoiceChannel,
 } from 'discord.js'
-import { Player, Queue, Track } from 'discord-player'
+import {Player, Queue, Track} from 'discord-player'
 
-import { EmbedMessage } from './embedMessage'
+import {EmbedMessage} from './embedMessage'
 
 interface QueueChannel {
   channel: VoiceChannel
@@ -15,7 +15,7 @@ interface QueueChannel {
 export default (player: Player) => {
   player.on('trackStart', async (queue: Queue, track: Track) => {
     const embed = EmbedMessage(`🎶🎶 Agora tocando ${track.title} 🎶🎶`)
-    const message = await channelExtractor(queue, { embeds: [embed] })
+    const message = await channelExtractor(queue, {embeds: [embed]})
     setTimeout(() => message.delete(), 10000)
   })
 
@@ -24,7 +24,7 @@ export default (player: Player) => {
       `Erro ao tocar ${queue.nowPlaying().title}, pulando para próxima`
     )
     queue.skip()
-    await channelExtractor(queue, { embeds: [embed] })
+    await channelExtractor(queue, {embeds: [embed]})
     console.log(`Error at ${queue.guild.name} | ${error}`)
   })
 }

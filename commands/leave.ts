@@ -11,7 +11,8 @@ module.exports = {
     if (!interaction.guildId) return
     if (
       interaction.member instanceof GuildMember &&
-      interaction.member.voice.channelId == interaction.guild?.me?.voice.channelId
+      interaction.member.voice.channelId ==
+        interaction.guild?.me?.voice.channelId
     ) {
       const queue = player.getQueue(interaction.guildId)
       queue.destroy(true)
@@ -20,7 +21,10 @@ module.exports = {
         .setColor('RED')
       interaction.followUp({embeds: [embed]})
     } else {
-      interaction.followUp({content: 'Voce não está no meu canal!', ephemeral: true})
+      interaction.followUp({
+        content: 'Voce não está no meu canal!',
+        ephemeral: true,
+      })
     }
   },
 }
