@@ -8,6 +8,7 @@ import {
 } from 'discord.js'
 import { Player, QueryType } from 'discord-player'
 
+import { EmbedMessage } from '../helpers/embedMessage'
 import { SlashCommandBuilder } from '@discordjs/builders'
 
 export type metatadaQueue = {
@@ -82,7 +83,7 @@ module.exports = {
         )
       await interaction.followUp({ embeds: [embed] })
     } else {
-      await interaction.editReply('Voce não está em um canal!')
+      EmbedMessage('Voce não está em um canal de voz!', interaction, 'RED')
     }
   }
 }
