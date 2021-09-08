@@ -72,12 +72,16 @@ module.exports = {
           switch (i.customId) {
             case 'previous':
               queue.metadata.currentPage -= 1
+              break
             case 'next':
               queue.metadata.currentPage += 1
+              break
             case 'first':
               queue.metadata.currentPage = 0
+              break
             case 'last':
               queue.metadata.currentPage = (queue.tracks.length - 10) / 10
+              break
           }
           const currentPage = queue.metadata?.currentPage,
             start = currentPage * 10
