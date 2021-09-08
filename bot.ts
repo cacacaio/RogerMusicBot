@@ -18,5 +18,8 @@ export default class extends Player {
   constructor(client: Client) {
     super(client)
     this.commands = new Collection<string, Commands>()
+    this.options.ytdlOptions = {
+      requestOptions: { headers: { cookie: process.env.COOKIE } }
+    }
   }
 }

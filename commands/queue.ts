@@ -5,13 +5,13 @@ import {
   Message,
   MessageActionRow,
   MessageButton,
-  MessageComponentInteraction,
+  MessageComponentInteraction
 } from 'discord.js'
 
-import {EmbedMessage} from '../helpers/embedMessage'
-import {Player} from 'discord-player'
-import {SlashCommandBuilder} from '@discordjs/builders'
-import {metatadaQueue} from './play'
+import { EmbedMessage } from '../helpers/embedMessage'
+import { Player } from 'discord-player'
+import { SlashCommandBuilder } from '@discordjs/builders'
+import { metatadaQueue } from './play'
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -29,7 +29,7 @@ module.exports = {
         return EmbedMessage({
           message: 'Não tem nenhuma musica tocando',
           interaction,
-          color: 'RED',
+          color: 'RED'
         })
       const playListTrack = queue.tracks
         .slice(0, 10)
@@ -59,28 +59,25 @@ module.exports = {
       )
       const message = (await interaction.followUp({
         embeds: [embed],
-        components: [row],
+        components: [row]
       })) as Message
 
       const collector = message.createMessageComponentCollector({
         componentType: 'BUTTON',
-        time: 300000,
+        time: 300000
       })
 
       collector.on('collect', async (i) => {
         if (typeof queue.metadata?.currentPage == 'number') {
-          if (i.customId == 'previous') {
-            queue.metadata.currentPage -= 1
-          }
-          if (i.customId == 'next') {
-            queue.metadata.currentPage += 1
-          }
-          if (i.customId == 'first') {
-            queue.metadata.currentPage = 0
-          }
-          if (i.customId == 'last') {
-            const lastPage = (queue.tracks.length - 10) / 10
-            queue.metadata.currentPage = lastPage
+          switch (i.customId) {
+            case 'previous':
+              queue.metadata.currentPage -= 1
+            case 'next':
+              queue.metadata.currentPage += 1
+            case 'first':
+              queue.metadata.currentPage = 0
+            case 'last':
+              queue.metadata.currentPage = (queue.tracks.length - 10) / 10
           }
           const currentPage = queue.metadata?.currentPage,
             start = currentPage * 10
@@ -92,7 +89,7 @@ module.exports = {
             )
           if (nextPage.length == 0) return i.deferUpdate()
           await interaction.editReply({
-            embeds: [EmbedMessage(nextPage.join('\n'))],
+            embeds: [EmbedMessage(nextPage.join('\n'))]
           })
           i.deferUpdate()
         }
@@ -101,8 +98,8 @@ module.exports = {
       return EmbedMessage({
         message: 'Você não está no mesmo canal que eu',
         interaction,
-        color: 'RED',
+        color: 'RED'
       })
     }
-  },
+  }
 }
