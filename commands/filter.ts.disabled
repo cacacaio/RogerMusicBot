@@ -1,10 +1,5 @@
-import {AudioFilters, Player} from 'discord-player'
-import {
-  CommandInteraction,
-  GuildMember,
-  Interaction,
-  MessageEmbed,
-} from 'discord.js'
+import {AudioFilters, Player, QueueFilters} from 'discord-player'
+import {CommandInteraction, GuildMember} from 'discord.js'
 
 import {EmbedMessage} from '../helpers/embedMessage'
 import {SlashCommandBuilder} from '@discordjs/builders'
@@ -37,8 +32,9 @@ const filters = {
   earrape: 'string',
 }
 
-const filtersArr: [name: string, value: string][] = []
-Object.keys({...filters}).map((v) => filtersArr.push([v, v]))
+const filtersArr: [name: string, value: string][] = Object.keys({
+  ...filters,
+}).map((v) => [v, v])
 
 module.exports = {
   data: new SlashCommandBuilder()
