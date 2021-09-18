@@ -25,7 +25,7 @@ export default (player: Player) => {
     )
     queue.skip()
     await channelExtractor(queue, {embeds: [embed]})
-    console.log(`Error at ${queue.guild.name} | ${error}`)
+    console.log(`Error at ${queue.guild.name} - ${queue.guild.id} | ${error}`)
   })
 }
 

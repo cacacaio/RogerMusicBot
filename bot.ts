@@ -2,11 +2,11 @@ import {
   BaseCommandInteraction,
   Client,
   Collection,
-  CommandInteraction
+  CommandInteraction,
 } from 'discord.js'
 
-import { Player } from 'discord-player'
-import { SlashCommandOptionsOnlyBuilder } from '@discordjs/builders'
+import {Player} from 'discord-player'
+import {SlashCommandOptionsOnlyBuilder} from '@discordjs/builders'
 
 export interface Commands {
   data: SlashCommandOptionsOnlyBuilder
@@ -19,7 +19,9 @@ export default class extends Player {
     super(client)
     this.commands = new Collection<string, Commands>()
     this.options.ytdlOptions = {
-      requestOptions: { headers: { cookie: process.env.COOKIE } }
+      requestOptions: {headers: {cookie: process.env.COOKIE}},
+      highWaterMark: 1 << 25,
+      filter: 'audioonly',
     }
   }
 }
