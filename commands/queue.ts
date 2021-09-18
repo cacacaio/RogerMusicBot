@@ -5,13 +5,13 @@ import {
   Message,
   MessageActionRow,
   MessageButton,
-  MessageComponentInteraction
+  MessageComponentInteraction,
 } from 'discord.js'
 
-import { EmbedMessage } from '../helpers/embedMessage'
-import { Player } from 'discord-player'
-import { SlashCommandBuilder } from '@discordjs/builders'
-import { metatadaQueue } from './play'
+import {EmbedMessage} from '../helpers/embedMessage'
+import {Player} from 'discord-player'
+import {SlashCommandBuilder} from '@discordjs/builders'
+import {metatadaQueue} from './play'
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -29,7 +29,7 @@ module.exports = {
         return EmbedMessage({
           message: 'Não tem nenhuma musica tocando',
           interaction,
-          color: 'RED'
+          color: 'RED',
         })
       const playListTrack = queue.tracks
         .slice(0, 10)
@@ -59,12 +59,12 @@ module.exports = {
       )
       const message = (await interaction.followUp({
         embeds: [embed],
-        components: [row]
+        components: [row],
       })) as Message
 
       const collector = message.createMessageComponentCollector({
         componentType: 'BUTTON',
-        time: 300000
+        time: 300000,
       })
 
       collector.on('collect', async (i) => {
@@ -93,7 +93,7 @@ module.exports = {
             )
           if (nextPage.length == 0) return i.deferUpdate()
           await interaction.editReply({
-            embeds: [EmbedMessage(nextPage.join('\n'))]
+            embeds: [EmbedMessage(nextPage.join('\n'))],
           })
           i.deferUpdate()
         }
@@ -102,8 +102,8 @@ module.exports = {
       return EmbedMessage({
         message: 'Você não está no mesmo canal que eu',
         interaction,
-        color: 'RED'
+        color: 'RED',
       })
     }
-  }
+  },
 }

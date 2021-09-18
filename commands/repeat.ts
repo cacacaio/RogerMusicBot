@@ -19,7 +19,7 @@ module.exports = {
     const queue = player.getQueue(interaction.guildId)
     if (!queue)
       await EmbedMessage({
-        message: 'Não existe musica para skipar',
+        message: 'Não existe musica para repetir',
         interaction,
       })
     if (
