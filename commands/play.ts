@@ -52,6 +52,7 @@ module.exports = {
           if (source === 'youtube') {
             return (await playdl.stream(track.url)).stream
           }
+          return undefined as unknown as Promise<any>
         },
       })
 
