@@ -4,12 +4,13 @@ import {
   MessageEmbed,
   StageChannel,
   TextBasedChannels,
-  VoiceChannel
+  VoiceChannel,
 } from 'discord.js'
-import { Player, QueryType } from 'discord-player'
+import * as playdl from 'play-dl'
+import {Player, QueryType} from 'discord-player'
 
-import { EmbedMessage } from '../helpers/embedMessage'
-import { SlashCommandBuilder } from '@discordjs/builders'
+import {EmbedMessage} from '../helpers/embedMessage'
+import {SlashCommandBuilder} from '@discordjs/builders'
 
 export type metatadaQueue = {
   channel: VoiceChannel | StageChannel
@@ -34,7 +35,7 @@ module.exports = {
       const channel = interaction.member.voice.channel
       const track = await player.search(url, {
         requestedBy: interaction.user,
-        searchEngine: QueryType.AUTO
+        searchEngine: QueryType.AUTO,
       })
 
       if (!track || !track.tracks.length) {
@@ -45,8 +46,13 @@ module.exports = {
         metadata: {
           channel: channel,
           textChannel: interaction.channel,
-          currentPage: 0
-        }
+          currentPage: 0,
+        },
+        async onBeforeCreateStream(track, source, _queue) {
+          if (source === 'youtube') {
+            return (await playdl.stream(track.url)).stream
+          }
+        },
       })
 
       if (!queue.connection) {
@@ -81,13 +87,13 @@ module.exports = {
           '',
           `https://youtube.com/${encodeURIComponent(currentTrack.author)}`
         )
-      await interaction.followUp({ embeds: [embed] })
+      await interaction.followUp({embeds: [embed]})
     } else {
       EmbedMessage({
         message: 'Voce não está em um canal de voz!',
         interaction,
-        color: 'RED'
+        color: 'RED',
       })
     }
-  }
+  },
 }
