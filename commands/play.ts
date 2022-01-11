@@ -50,6 +50,7 @@ module.exports = {
         },
         async onBeforeCreateStream(track, source, _queue) {
           if (source === 'youtube') {
+            await playdl.setToken({youtube: {cookie: (process.env.COOKIE as string)}})
             return (await playdl.stream(track.url)).stream
           }
           return undefined as unknown as Promise<any>
