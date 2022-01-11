@@ -15,11 +15,13 @@ module.exports = {
         interaction.guild?.me?.voice.channelId
     ) {
       const queue = player.getQueue(interaction.guildId)
-      queue.destroy(true)
+      if(queue){
+        queue.destroy(true)
       const embed = new MessageEmbed()
         .setDescription('Saindo do canal e deletando playlist')
         .setColor('RED')
       interaction.followUp({embeds: [embed]})
+      }
     } else {
       interaction.followUp({
         content: 'Voce não está no meu canal!',
