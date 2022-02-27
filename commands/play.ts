@@ -26,6 +26,8 @@ module.exports = {
       option.setName('song').setRequired(true).setDescription('Nome da musica')
     ),
   execute: async (interaction: CommandInteraction, player: Player) => {
+    try{
+      
     if (!interaction.guildId && !interaction.guild) return
     const url = interaction.options.getString('song', true)
     if (
@@ -96,6 +98,11 @@ module.exports = {
         interaction,
         color: 'RED',
       })
+    }
+    }
+    catch(err) {
+      console.log(err);
+      interaction.followUp('Erro ao tocar a musica')
     }
   },
 }
